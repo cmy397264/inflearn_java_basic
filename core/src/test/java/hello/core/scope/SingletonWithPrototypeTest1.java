@@ -2,13 +2,12 @@ package hello.core.scope;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import jakarta.inject.Provider;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Scope;
-
-import javax.inject.Provider;
 
 public class SingletonWithPrototypeTest1 {
 
@@ -41,16 +40,19 @@ public class SingletonWithPrototypeTest1 {
 
     }
 
+    // 강의에선 javax를 build.gradle 에 추가하여 Provider를 사용
+    // 현재 사용하고 있는 버젼에선 오류가 발생하여
+    // javax 대신 jakarta를 사용하여 해결함.
     @Scope("singleton")
     static class ClientBean {
+
         @Autowired
-        private Provider<PrototypeBean> prototypeBeansProvider;
+        private Provider<PrototypeBean> prototypeBeanProvider;
 
         public int logic() {
-            PrototypeBean prototypeBean = prototypeBeansProvider.get();
+            PrototypeBean prototypeBean = prototypeBeanProvider.get();
             prototypeBean.addCount();
-            int count = prototypeBean.getCount();
-            return count;
+            return prototypeBean.getCount();
         }
     }
 
@@ -76,5 +78,4 @@ public class SingletonWithPrototypeTest1 {
             System.out.println("PrototypeBean.destroy()");
         }
     }
-
 }
